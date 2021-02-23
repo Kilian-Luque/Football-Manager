@@ -6,7 +6,11 @@ import { Component } from '@angular/core';
   styleUrls: ['tab1.page.scss']
 })
 export class Tab1Page {
+  showSegments: boolean = false;
 
   constructor() {}
 
+  checkFocus(): void {
+    this.showSegments = !this.showSegments;
+  }
 }
