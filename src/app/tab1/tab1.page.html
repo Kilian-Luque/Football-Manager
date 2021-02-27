@@ -1,24 +1,72 @@
 <ion-header>
   <ion-searchbar
     showCancelButton="focus"
+    (ionInput)="search($event.target.value)"
+    [(ngModel)]="searchTerm"
   ></ion-searchbar>
 </ion-header>
 
-<ion-segment (ionChange)="segmentChanged($event)">
-  <ion-segment-button>
+<ion-segment
+  [value]="segmentModel"
+  (ionChange)="segmentChanged($event.detail.value)"
+>
+  <ion-segment-button value="all">
     <ion-icon name="menu-outline"></ion-icon>
   </ion-segment-button>
-  <ion-segment-button>
+  <ion-segment-button value="players">
     <ion-icon name="person-outline"></ion-icon>
   </ion-segment-button>
-  <ion-segment-button>
+  <ion-segment-button value="teams">
     <ion-icon name="people-outline"></ion-icon>
   </ion-segment-button>
-  <ion-segment-button>
+  <ion-segment-button value="leagues">
     <ion-icon name="football-outline"></ion-icon>
   </ion-segment-button>
 </ion-segment>
 
-<ion-content [fullscreen]="true">
-  
+<ion-content>
+  <ion-list *ngIf="segmentModel === 'all'">
+    <ion-item button *ngFor="let item of allResults">
+      <ion-avatar slot="start">
+        <img *ngIf="item['Avatar']" [src]="item['Avatar']">
+        <img *ngIf="item['Logo del Equipo']" [src]="item['Logo del Equipo']">
+        <img *ngIf="item['Logo de la Liga']" [src]="item['Logo de la Liga']">
+      </ion-avatar>
+      <ion-label text-wrap>
+        <h3 *ngIf="item['Nombre del Jugador']">{{ item['Nombre del Jugador'] }}</h3>
+        <h3 *ngIf="item['Nombre del equipo']">{{ item['Nombre del equipo'] }}</h3>
+        <h3 *ngIf="item['Nombre De La Liga']">{{ item['Nombre De La Liga'] }}</h3>
+      </ion-label>
+    </ion-item>
+  </ion-list>
+  <ion-list *ngIf="segmentModel === 'players'">
+    <ion-item button *ngFor="let item of (playerObservable | async)">
+      <ion-avatar slot="start">
+        <img [src]="item['Avatar']">
+      </ion-avatar>
+      <ion-label text-wrap>
+        <h3>{{ item["Nombre del Jugador"] }}</h3>
+      </ion-label>
+    </ion-item>
+  </ion-list>
+  <ion-list *ngIf="segmentModel === 'teams'">
+    <ion-item button *ngFor="let item of (teamObservable | async)">
+      <ion-avatar slot="start">
+        <img [src]="item['Logo del Equipo']">
+      </ion-avatar>
+      <ion-label text-wrap>
+        <h3>{{ item["Nombre del equipo"] }}</h3>
+      </ion-label>
+    </ion-item>
+  </ion-list>
+  <ion-list *ngIf="segmentModel === 'leagues'">
+    <ion-item button *ngFor="let item of (leagueObservable | async)">
+      <ion-avatar slot="start">
+        <img [src]="item['Logo de la Liga']">
+      </ion-avatar>
+      <ion-label text-wrap>
+        <h3>{{ item["Nombre De La Liga"] }}</h3>
+      </ion-label>
+    </ion-item>
+  </ion-list>
 </ion-content>
