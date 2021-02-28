@@ -27,4 +27,16 @@ export class TeamService {
       )
     }
   }
+
+  getTeamById(id: string): Observable<Team> {
+    return this.http.get<Team>(`${environment.teamsUrl}/${id}`);
+  }
+
+  getTeamsByLeagueId(leagueId: string): Observable<Team[]> {
+    return this.getTeams().pipe(
+      map(results => {
+        return results.filter(team => team["Liga"] === leagueId);
+      })
+    )
+  }
 }

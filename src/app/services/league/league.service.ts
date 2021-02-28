@@ -3,7 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 
-import { League } from '../../interfaces/league'
+import { League } from '../../interfaces/league';
 
 import { environment } from './../../../environments/environment'
 
@@ -26,5 +26,9 @@ export class LeagueService {
         })
       )
     }
+  }
+
+  getLeagueById(id: string): Observable<League> {
+    return this.http.get<League>(`${environment.leaguesUrl}/${id}`);
   }
 }

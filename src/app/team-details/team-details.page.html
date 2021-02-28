@@ -1,0 +1,55 @@
+<ion-header *ngIf="teamDetails && leagueDetails && playersList" >
+  <ion-toolbar class="header">
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="tab1"></ion-back-button>
+    </ion-buttons>
+    <ion-avatar slot="start" class="details-page-avatar">
+      <img [src]="teamDetails['Logo del Equipo']">
+    </ion-avatar>
+    <ion-title>{{ teamDetails["Nombre del equipo"] }}</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content *ngIf="teamDetails && leagueDetails && playersList">
+  <ion-item-group>
+    <ion-item-divider class="details-page-item-divider">
+      <ion-label>
+        <h2>Description</h2>
+      </ion-label>
+    </ion-item-divider>
+    <ion-item>
+      <ion-label text-wrap>
+        <h2 *ngIf="teamDetails.description">{{ teamDetails["description"] }}</h2>
+        <h2 *ngIf="!teamDetails.description"><i>No description provided yet.</i></h2>
+      </ion-label>
+    </ion-item>
+    <ion-item-divider class="details-page-item-divider">
+      <ion-label>
+        <h2>League</h2>
+      </ion-label>
+    </ion-item-divider>
+    <ion-item [routerLink]="['/tabs/tab1/league/', leagueDetails.id]">
+      <ion-avatar slot="start">
+        <img [src]="leagueDetails['Logo de la Liga']">
+      </ion-avatar>
+      <ion-label>
+        <h2>{{ leagueDetails["Nombre De La Liga"] }}</h2>
+      </ion-label>
+    </ion-item>
+    <ion-item-divider class="details-page-item-divider">
+      <ion-label>
+        <h2>Players</h2>
+      </ion-label>
+    </ion-item-divider>
+    <ion-list>
+      <ion-item *ngFor="let item of playersList" [routerLink]="['/tabs/tab1/player/', item.id]">
+        <ion-avatar slot="start">
+          <img [src]="item['Avatar']">
+        </ion-avatar>
+        <ion-label>
+          <h2>{{ item["Nombre del Jugador"] }}</h2>
+        </ion-label>
+      </ion-item>
+    </ion-list>
+  </ion-item-group>
+</ion-content>

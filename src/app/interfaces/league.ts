@@ -1,5 +1,5 @@
 export interface League {
     "Nombre De La Liga": string,
-    "Identificador": string,
+    "id": string,
     "Logo de la Liga": string,
   }

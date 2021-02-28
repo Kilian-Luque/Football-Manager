@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
-import { EMPTY, Observable, Subscription } from 'rxjs';
+import { EMPTY, Observable, Subscription, zip } from 'rxjs';
+import { map } from 'rxjs/operators';
 
 import { Player } from '../interfaces/player';
 import { PlayerService } from '../services/player/player.service';
@@ -21,12 +22,7 @@ export class Tab1Page {
   playerObservable: Observable<Player[]>;
   teamObservable: Observable<Team[]>;
   leagueObservable: Observable<League[]>;
-
-  allResults: Array<any>;
-
-  playerSuscription: Subscription;
-  teamSuscription: Subscription;
-  leagueSuscription: Subscription;
+  allObservable: Observable<Array<Player | Team | League>>;
 
   constructor(
     private playerService: PlayerService,
@@ -34,10 +30,10 @@ export class Tab1Page {
     private leagueService: LeagueService
   ) {}
 
-  ionViewWillEnter(): void {
+  ngOnInit(): void {
     this.showSegments = false;
     this.searchTerm = "";
-    this.segmentModel = "all"; 
+    this.segmentModel = "all";
 
     this.playerSearchInit();
     this.teamSearchInit();
@@ -45,41 +41,41 @@ export class Tab1Page {
     this.allSearchInit();
   }
 
+  // Not used by now
   checkFocus(): void {
     this.showSegments = !this.showSegments;
   }
 
   search(searchString: string): void {
-    this.allSearchInit();
+    this.searchTerm = searchString;
 
-    if (searchString.length === 0) {     
-      this.searchTerm = "";
-      this.playerSearchInit();
-      this.teamSearchInit();
-      this.leagueSearchInit();
-    } else {
-      this.searchTerm = searchString; 
+    if (searchString.length > 0) {     
       this.playerSearch();
       this.teamSearch();
       this.leagueSearch();
       this.allSearch();
+    } else {
+      this.playerSearchInit();
+      this.teamSearchInit();
+      this.leagueSearchInit();
+      this.allSearchInit();
     }
   }
 
   playerSearchInit() {
-    this.playerObservable = EMPTY;
+    this.playerObservable = undefined;
   }
 
   teamSearchInit() {
-    this.teamObservable = EMPTY;
+    this.teamObservable = undefined;
   }
 
   leagueSearchInit() {
-    this.leagueObservable = EMPTY;
+    this.leagueObservable = undefined;
   }
 
   allSearchInit() {
-    this.allResults = [];
+    this.allObservable = undefined;
   }
 
   playerSearch() {
@@ -95,27 +91,17 @@ export class Tab1Page {
   }
 
   allSearch() {
-    this.playerSuscription = this.playerObservable.subscribe(results => this.allResults = this.allResults.concat(results));
-    this.teamSuscription = this.teamObservable.subscribe(results => this.allResults = this.allResults.concat(results));
-    this.leagueSuscription = this.leagueObservable.subscribe(results => this.allResults = this.allResults.concat(results));
-    
+    this.allObservable = zip(this.playerObservable, this.teamObservable, this.leagueObservable).pipe(
+      map(results => {
+        results[0].map(result => result["tipo"] = 'player');
+        results[1].map(result => result["tipo"] = 'team');
+        results[2].map(result => result["tipo"] = 'league');
+        return [].concat(results[0], results[1], results[2]);
+      })
+    )
   }
 
   segmentChanged(segment: string): void {
     this.segmentModel = segment;
-  }
-
-  ionViewWillLeave(): void {
-    if (this.playerSuscription) {
-      this.playerSuscription.unsubscribe();
-    }
-
-    if (this.teamSuscription) {
-      this.teamSuscription.unsubscribe();
-    }
-
-    if (this.leagueSuscription) {
-      this.leagueSuscription.unsubscribe();
-    }
   }
 }

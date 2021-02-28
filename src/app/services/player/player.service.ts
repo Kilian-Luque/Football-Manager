@@ -7,8 +7,6 @@ import { Player } from '../../interfaces/player'
 
 import { environment } from './../../../environments/environment'
 
-
-
 @Injectable({
   providedIn: 'root'
 })
@@ -30,5 +28,15 @@ export class PlayerService {
     }
   }
 
-  getPlayersByString() {}
+  getPlayerById(id: string): Observable<Player> {
+    return this.http.get<Player>(`${environment.playersUrl}/${id}`);
+  }
+
+  getPlayersByTeamId(teamId: string): Observable<Player[]> {
+    return this.getPlayers().pipe(
+      map(results => {
+        return results.filter(player => player["teamId"] === teamId);
+      })
+    )
+  }
 }
