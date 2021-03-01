@@ -31,4 +31,8 @@ export class LeagueService {
   getLeagueById(id: string): Observable<League> {
     return this.http.get<League>(`${environment.leaguesUrl}/${id}`);
   }
+
+  deleteLeague(id: string): Observable<League> {
+    return this.http.delete<League>(`${environment.leaguesUrl}/${id}`);
+  }
 }

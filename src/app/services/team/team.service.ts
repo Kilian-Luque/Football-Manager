@@ -39,4 +39,8 @@ export class TeamService {
       })
     )
   }
+
+  deleteTeam(id: string): Observable<Team> {
+    return this.http.delete<Team>(`${environment.teamsUrl}/${id}`);
+  }
 }

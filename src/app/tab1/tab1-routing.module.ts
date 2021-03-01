@@ -19,6 +19,18 @@ const routes: Routes = [
   {
     path: 'league/:id',
     loadChildren: () => import('./../league-details/league-details.module').then( m => m.LeagueDetailsPageModule)
+  },
+  {
+    path: 'addPlayer',
+    loadChildren: () => import('./../player-details-create/player-details-create.module').then( m => m.PlayerDetailsCreatePageModule)
+  },
+  {
+    path: 'addTeam',
+    loadChildren: () => import('./../team-details-create/team-details-create.module').then( m => m.TeamDetailsCreatePageModule)
+  },
+  {
+    path: 'addLeague',
+    loadChildren: () => import('./../league-details-create/league-details-create.module').then( m => m.LeagueDetailsCreatePageModule)
   }
 ];
 

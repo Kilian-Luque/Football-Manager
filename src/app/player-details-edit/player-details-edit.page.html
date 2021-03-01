@@ -1,0 +1,12 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button [defaultHref]="'/tabs/tab1/player/' + playerDetails.id"></ion-back-button>
+    </ion-buttons> 
+    <ion-title>Edit Player</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <app-player-details-editor [playerDetails]="playerDetails" (playerDetailsEmitter)="playerDetails=$event"></app-player-details-editor>
+</ion-content>

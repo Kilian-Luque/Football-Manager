@@ -39,4 +39,16 @@ export class PlayerService {
       })
     )
   }
+
+  createPlayer(player: Player): Observable<Player> {
+    return this.http.post<Player>(`${environment.playersUrl}`, player);
+  }
+
+  updatePlayer(id: string, player: Player): Observable<Player> {
+    return this.http.patch<Player>(`${environment.playersUrl}/${id}`, player);
+  }
+
+  deletePlayer(id: string): Observable<Player> {
+    return this.http.delete<Player>(`${environment.playersUrl}/${id}`);
+  }
 }

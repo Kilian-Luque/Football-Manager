@@ -7,6 +7,10 @@ const routes: Routes = [
   {
     path: '',
     component: PlayerDetailsPage
+  },
+  {
+    path: 'edit',
+    loadChildren: () => import('../player-details-edit/player-details-edit.module').then( m => m.PlayerDetailsEditPageModule)
   }
 ];
 

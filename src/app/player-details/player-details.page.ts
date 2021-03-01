@@ -3,12 +3,16 @@ import { ActivatedRoute } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { mergeMap } from 'rxjs/operators';
 
+
+
 import { Player } from '../interfaces/player';
 import { Team } from '../interfaces/team';
 import { League } from '../interfaces/league';
 import { PlayerService } from '../services/player/player.service';
 import { TeamService } from '../services/team/team.service';
 import { LeagueService } from '../services/league/league.service';
+import { PopoverController } from '@ionic/angular';
+import { DetailsPagePopoverComponent } from '../components/details-page-popover/details-page-popover.component';
 
 @Component({
   selector: 'app-player-details',
@@ -24,12 +28,13 @@ export class PlayerDetailsPage implements OnInit, OnDestroy {
 
   constructor(
     private activatedRoute: ActivatedRoute,
+    private popoverCtrl: PopoverController,
     private playerService: PlayerService,
     private teamService: TeamService,
-    private leagueService: LeagueService
+    private leagueService: LeagueService,
   ) { }
 
-  ngOnInit() {
+  ngOnInit(): void {
     let id = this.activatedRoute.snapshot.paramMap.get('id');
  
     this.playerDetailsSuscriptor = this.playerService.getPlayerById(id).pipe(
@@ -53,7 +58,19 @@ export class PlayerDetailsPage implements OnInit, OnDestroy {
     );
   }
 
-  ngOnDestroy() {
+  async showPopover(event: Event): Promise<void> {
+    let popover = await this.popoverCtrl.create({
+      event,
+      component: DetailsPagePopoverComponent,
+      componentProps: {
+        item: this.playerDetails,
+        itemType: "player"
+      }
+    })
+    return await popover.present();
+  }
+
+  ngOnDestroy(): void {
     if (this.playerDetailsSuscriptor) this.playerDetailsSuscriptor.unsubscribe();
   }
 }

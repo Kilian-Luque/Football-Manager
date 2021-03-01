@@ -1,9 +1,25 @@
-
+<ion-item>
 <ion-searchbar
   showCancelButton="focus"
   (ionInput)="search($event.target.value)"
   [(ngModel)]="searchTerm"
 ></ion-searchbar>
+<ion-buttons *ngIf="segmentModel === 'players'">
+  <ion-button [routerLink]="['addPlayer']">
+    <ion-icon name="add-outline" size="large"></ion-icon>
+  </ion-button>
+</ion-buttons>
+<ion-buttons *ngIf="segmentModel === 'teams'">
+  <ion-button [routerLink]="['addTeam']">
+    <ion-icon name="add-outline" size="large"></ion-icon>
+  </ion-button>
+</ion-buttons>
+<ion-buttons *ngIf="segmentModel === 'leagues'">
+  <ion-button [routerLink]="['addLeague']">
+    <ion-icon name="add-outline" size="large"></ion-icon>
+  </ion-button>
+</ion-buttons>
+</ion-item>
 
 
 <ion-segment
@@ -25,12 +41,13 @@
 </ion-segment>
 
 <ion-content>
-  <ion-list *ngIf="segmentModel === 'all' && allObservable">
-    <ion-item button *ngFor="let item of (allObservable | async)" [routerLink]="[item.tipo, item.id]">
-      <ion-avatar slot="start">
+  <ion-list *ngIf="segmentModel === 'all' && getAllObservable()">
+    <ion-item button *ngFor="let item of (getAllObservable() | async)" [routerLink]="[item.tipo, item.id]">
+      <ion-avatar slot="start" class="avatar-img">
         <img *ngIf="item['Avatar']" [src]="item['Avatar']">
         <img *ngIf="item['Logo del Equipo']" [src]="item['Logo del Equipo']">
         <img *ngIf="item['Logo de la Liga']" [src]="item['Logo de la Liga']">
+        <img *ngIf="!item['Avatar'] && !item['Logo del Equipo'] && !item['Logo de la Liga']" src="../../../assets/images/default-avatar.png">
       </ion-avatar>
       <ion-label text-wrap>
         <h3 *ngIf="item['Nombre del Jugador']">{{ item['Nombre del Jugador'] }}</h3>
@@ -40,10 +57,11 @@
       <ion-icon name="arrow-forward"></ion-icon>
     </ion-item>
   </ion-list>
-  <ion-list *ngIf="segmentModel === 'players' && playerObservable">
-    <ion-item button *ngFor="let item of (playerObservable | async)" [routerLink]="['player', item.id]">
-      <ion-avatar slot="start">
-        <img [src]="item['Avatar']">
+  <ion-list *ngIf="segmentModel === 'players' && getPlayerObservable()">
+    <ion-item button *ngFor="let item of (getPlayerObservable() | async)" [routerLink]="['player', item.id]">
+      <ion-avatar slot="start" class="avatar-img">
+        <img *ngIf="item['Avatar']" [src]="item['Avatar']">
+        <img *ngIf="!item['Avatar']" src="../../../assets/images/default-avatar.png">
       </ion-avatar>
       <ion-label text-wrap>
         <h3>{{ item["Nombre del Jugador"] }}</h3>
@@ -51,10 +69,11 @@
       <ion-icon name="arrow-forward"></ion-icon>
     </ion-item>
   </ion-list>
-  <ion-list *ngIf="segmentModel === 'teams' && teamObservable">
-    <ion-item button *ngFor="let item of (teamObservable | async)" [routerLink]="['team', item.id]">
-      <ion-avatar slot="start">
-        <img [src]="item['Logo del Equipo']">
+  <ion-list *ngIf="segmentModel === 'teams' && getTeamObservable()">
+    <ion-item button *ngFor="let item of (getTeamObservable() | async)" [routerLink]="['team', item.id]">
+      <ion-avatar slot="start" class="avatar-img">
+        <img *ngIf="item['Logo del Equipo']" [src]="item['Logo del Equipo']">
+        <img *ngIf="!item['Logo del Equipo']" src="../../../assets/images/default-avatar.png">
       </ion-avatar>
       <ion-label text-wrap>
         <h3>{{ item["Nombre del equipo"] }}</h3>
@@ -62,10 +81,11 @@
       <ion-icon name="arrow-forward"></ion-icon>
     </ion-item>
   </ion-list>
-  <ion-list *ngIf="segmentModel === 'leagues' && leagueObservable">
-    <ion-item button *ngFor="let item of (leagueObservable | async)" [routerLink]="['league', item.id]">
-      <ion-avatar slot="start">
-        <img [src]="item['Logo de la Liga']">
+  <ion-list *ngIf="segmentModel === 'leagues' && getLeagueObservable()">
+    <ion-item button *ngFor="let item of (getLeagueObservable() | async)" [routerLink]="['league', item.id]">
+      <ion-avatar slot="start" class="avatar-img">
+        <img *ngIf="item['Logo de la Liga']" [src]="item['Logo de la Liga']">
+        <img *ngIf="!item['Logo de la Liga']" src="../../../assets/images/default-avatar.png">
       </ion-avatar>
       <ion-label text-wrap>
         <h3>{{ item["Nombre De La Liga"] }}</h3>

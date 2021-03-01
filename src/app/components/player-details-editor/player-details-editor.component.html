@@ -1,0 +1,44 @@
+<ng-container *ngIf="teamsList">
+  <div class="page-details-editor-avatar-container" >
+    <ion-avatar slot="start" class="page-details-editor-avatar avatar-img">
+      <img *ngIf="playerDetails" [src]="playerDetails['Avatar']">
+      <img *ngIf="!playerDetails" src="../../../assets/images/default-avatar.png">
+    </ion-avatar>
+  </div>
+  <form [formGroup]="playerForm" (ngSubmit)="submit()">
+    <ion-item-group>
+      <ion-item-divider class="details-page-item-divider">
+        <ion-label>
+          <h2>Name</h2>
+        </ion-label>
+      </ion-item-divider>
+      <ion-item>
+        <ion-input formControlName="Nombre del Jugador" type="text"></ion-input>
+      </ion-item>
+      <ion-item-divider class="details-page-item-divider">
+        <ion-label>
+          <h2>Description</h2>
+        </ion-label>
+      </ion-item-divider>
+      <ion-item>
+        <ion-textarea formControlName="description"></ion-textarea>
+      </ion-item>
+      <ion-item-divider class="details-page-item-divider">
+        <ion-label>
+          <h2>Team</h2>
+        </ion-label>
+      </ion-item-divider>
+      <ion-item>
+        <ion-select [value]="getTeamPosition()" (ionChange)="changeTeam($event)">
+          <ion-select-option *ngFor="let item of teamsList; let idx = index" [value]="idx + 1">{{ item["Nombre del equipo"] }}</ion-select-option>
+        </ion-select>
+      </ion-item>
+    </ion-item-group>
+    <div class="submit-button">
+      <ion-buttons>
+        <ion-button type="submit" [disabled]="!playerForm.valid">Save</ion-button>
+      </ion-buttons>
+    </div>
+  </form>
+</ng-container>
+

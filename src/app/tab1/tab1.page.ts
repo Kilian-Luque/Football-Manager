@@ -1,13 +1,10 @@
 import { Component } from '@angular/core';
-import { EMPTY, Observable, Subscription, zip } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { Observable } from 'rxjs';
 
 import { Player } from '../interfaces/player';
-import { PlayerService } from '../services/player/player.service';
 import { Team } from '../interfaces/team';
-import { TeamService } from '../services/team/team.service';
 import { League } from '../interfaces/league';
-import { LeagueService } from '../services/league/league.service';
+import { SearchService } from '../services/search/search.service';
 
 @Component({
   selector: 'app-tab1',
@@ -16,7 +13,6 @@ import { LeagueService } from '../services/league/league.service';
 })
 export class Tab1Page {
   showSegments: boolean;
-  searchTerm: string;
   segmentModel: string;
 
   playerObservable: Observable<Player[]>;
@@ -25,20 +21,14 @@ export class Tab1Page {
   allObservable: Observable<Array<Player | Team | League>>;
 
   constructor(
-    private playerService: PlayerService,
-    private teamService: TeamService,
-    private leagueService: LeagueService
+    private searchService: SearchService
   ) {}
 
   ngOnInit(): void {
     this.showSegments = false;
-    this.searchTerm = "";
     this.segmentModel = "all";
 
-    this.playerSearchInit();
-    this.teamSearchInit();
-    this.leagueSearchInit();
-    this.allSearchInit();
+    this.searchService.searchInit();
   }
 
   // Not used by now
@@ -47,58 +37,28 @@ export class Tab1Page {
   }
 
   search(searchString: string): void {
-    this.searchTerm = searchString;
+    this.searchService.search(searchString);
 
-    if (searchString.length > 0) {     
-      this.playerSearch();
-      this.teamSearch();
-      this.leagueSearch();
-      this.allSearch();
-    } else {
-      this.playerSearchInit();
-      this.teamSearchInit();
-      this.leagueSearchInit();
-      this.allSearchInit();
-    }
+    this.playerObservable = this.searchService.playerObservable;
+    this.teamObservable = this.searchService.teamObservable;
+    this.leagueObservable = this.searchService.leagueObservable;
+    this.allObservable = this.searchService.allObservable;
   }
 
-  playerSearchInit() {
-    this.playerObservable = undefined;
+  getPlayerObservable() {
+    return this.searchService.playerObservable;
   }
 
-  teamSearchInit() {
-    this.teamObservable = undefined;
+  getTeamObservable() {
+    return this.searchService.teamObservable;
   }
 
-  leagueSearchInit() {
-    this.leagueObservable = undefined;
+  getLeagueObservable() {
+    return this.searchService.leagueObservable;
   }
 
-  allSearchInit() {
-    this.allObservable = undefined;
-  }
-
-  playerSearch() {
-    this.playerObservable = this.playerService.getPlayers(this.searchTerm);
-  }
-
-  teamSearch() {
-    this.teamObservable = this.teamService.getTeams(this.searchTerm);
-  }
-
-  leagueSearch() {
-    this.leagueObservable = this.leagueService.getLeagues(this.searchTerm);
-  }
-
-  allSearch() {
-    this.allObservable = zip(this.playerObservable, this.teamObservable, this.leagueObservable).pipe(
-      map(results => {
-        results[0].map(result => result["tipo"] = 'player');
-        results[1].map(result => result["tipo"] = 'team');
-        results[2].map(result => result["tipo"] = 'league');
-        return [].concat(results[0], results[1], results[2]);
-      })
-    )
+  getAllObservable() {
+    return this.searchService.allObservable;
   }
 
   segmentChanged(segment: string): void {

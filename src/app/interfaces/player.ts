@@ -1,6 +1,7 @@
 export interface Player {
-  "Nombre del Jugador": string,
   id: string,
+  "Nombre del Jugador": string,
   "Avatar": string,
+  "descripcion"?: string,
   "teamId": string
 }
